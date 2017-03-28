@@ -15,6 +15,7 @@
         <dependency>
             <groupId>org.fenixedu</groupId>
             <artifactId>fenixedu-academic</artifactId>
+            <version>6.2.0</version>
         </dependency>
         <dependency>
             <groupId>pt.ist</groupId>

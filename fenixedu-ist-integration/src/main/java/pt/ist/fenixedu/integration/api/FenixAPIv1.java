@@ -854,7 +854,7 @@ public class FenixAPIv1 {
                         final ExecutionCourse executionCourse = attends.getExecutionCourse();
                         if (associatedExecutionCoursesSet.contains(executionCourse)) {
                             throw newApplicationError(Status.PRECONDITION_FAILED, "invalid_registration",
-                                    "student registration is " + registration.getActiveStateType().name());
+                                    "student registration is " + registration.getActiveStateType().getName());
                         }
                     }
                 }
