@@ -31,7 +31,7 @@ import org.fenixedu.academic.domain.QueueJobResult;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
+import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateSystem;
 import org.fenixedu.commons.spreadsheet.Spreadsheet;
 import org.fenixedu.commons.spreadsheet.Spreadsheet.Row;
 import org.joda.time.DateTime;
@@ -172,7 +172,7 @@ public class TutorshipStudentLowPerformanceQueueJob extends TutorshipStudentLowP
     private String flunkedStudent(List<Registration> registrations) {
         for (Registration registration : registrations) {
             for (RegistrationState registrationState : registration.getRegistrationStatesSet()) {
-                if (registrationState.getStateType() == RegistrationStateType.FLUNKED) {
+                if (registrationState.getStateType() == RegistrationStateSystem.getInstance().getFlunkedState()) {
                     return "Prescrito" + ";";
                 }
             }
@@ -241,11 +241,12 @@ public class TutorshipStudentLowPerformanceQueueJob extends TutorshipStudentLowP
     }
 
     protected static boolean isValidSourceLink(Registration source) {
-        return source.getActiveStateType().equals(RegistrationStateType.TRANSITED)
-                || source.getActiveStateType().equals(RegistrationStateType.FLUNKED)
-                || source.getActiveStateType().equals(RegistrationStateType.INTERNAL_ABANDON)
-                || source.getActiveStateType().equals(RegistrationStateType.EXTERNAL_ABANDON)
-                || source.getActiveStateType().equals(RegistrationStateType.INTERRUPTED);
+        return source.getActiveStateType().isValidSourceLink();
+//        return source.getActiveStateType().equals(RegistrationStateType.TRANSITED)
+//                || source.getActiveStateType().equals(RegistrationStateType.FLUNKED)
+//                || source.getActiveStateType().equals(RegistrationStateType.INTERNAL_ABANDON)
+//                || source.getActiveStateType().equals(RegistrationStateType.EXTERNAL_ABANDON)
+//                || source.getActiveStateType().equals(RegistrationStateType.INTERRUPTED);
     }
 
     private boolean isValidRegistration(Registration registration) {

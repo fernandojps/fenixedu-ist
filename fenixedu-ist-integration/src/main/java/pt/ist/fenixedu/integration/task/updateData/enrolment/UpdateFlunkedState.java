@@ -27,7 +27,7 @@ import org.fenixedu.academic.domain.StudentCurricularPlan;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.Student;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
+import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateSystem;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumGroup;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumModule;
 import org.fenixedu.academic.domain.studentCurriculum.ExtraCurriculumGroup;
@@ -182,7 +182,7 @@ public class UpdateFlunkedState extends CustomTask {
     private void changeToFlunkedState(final Registration registration) {
         taskLog("Change to Flunk State Registration -> " + registration.getDegreeCurricularPlanName());
 
-        if (registration.getActiveStateType() != RegistrationStateType.FLUNKED) {
+        if (registration.getActiveStateType().equals(RegistrationStateSystem.getInstance().getFlunkedState())) {
 
             final ExecutionYear executionYear = ExecutionYear.readCurrentExecutionYear();
 
@@ -191,7 +191,7 @@ public class UpdateFlunkedState extends CustomTask {
                 date = executionYear.getBeginDateYearMonthDay().toLocalDate();
             }
             RegistrationState.createRegistrationState(registration, null, date.toDateTimeAtStartOfDay(),
-                    RegistrationStateType.FLUNKED);
+                    RegistrationStateSystem.getInstance().getFlunkedState());
         }
     }
 }

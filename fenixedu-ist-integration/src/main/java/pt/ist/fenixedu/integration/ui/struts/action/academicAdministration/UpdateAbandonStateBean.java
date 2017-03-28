@@ -33,7 +33,7 @@ import org.fenixedu.academic.domain.administrativeOffice.AdministrativeOfficeTyp
 import org.fenixedu.academic.domain.degreeStructure.CycleType;
 import org.fenixedu.academic.domain.student.Registration;
 import org.fenixedu.academic.domain.student.registrationStates.RegistrationState;
-import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateType;
+import org.fenixedu.academic.domain.student.registrationStates.RegistrationStateSystem;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumLine;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumModule;
 import org.fenixedu.academic.domain.studentCurriculum.CurriculumModule.CurriculumModulePredicateByType;
@@ -106,21 +106,21 @@ public class UpdateAbandonStateBean implements Serializable {
 
         if (hasValidRegistrationAgreement(registration) && registration.isDegreeAdministrativeOffice()
                 && lastRegistrationState != null && lastRegistrationState.isActive()
-                && !lastRegistrationState.getStateType().equals(RegistrationStateType.MOBILITY) && !registration.hasConcluded()) {
+                && !lastRegistrationState.getStateType().isMobility() && !registration.hasConcluded()) {
 
             if (registration.getStartExecutionYear().isBefore(getWhenToAbandon().getExecutionYear())
                     && !hasAnyEnrolmentInPeriodOrPrevious(registration, startChecking)) {
 
                 if (registration.hasStateType(getWhenToAbandon().getPreviousExecutionPeriod(),
-                        RegistrationStateType.EXTERNAL_ABANDON)
-                        || registration.hasStateType(getWhenToAbandon(), RegistrationStateType.EXTERNAL_ABANDON)) {
+                        RegistrationStateSystem.getInstance().getExternalAbandonState())
+                        || registration.hasStateType(getWhenToAbandon(), RegistrationStateSystem.getInstance().getExternalAbandonState())) {
                     return false;
                 }
                 final YearMonthDay now = new YearMonthDay();
                 final RegistrationState state =
                         RegistrationState.createRegistrationState(registration, null, (now.isBefore(getWhenToAbandon()
                                 .getBeginDateYearMonthDay()) ? getWhenToAbandon().getBeginDateYearMonthDay() : now)
-                                .toDateTimeAtMidnight(), RegistrationStateType.EXTERNAL_ABANDON);
+                                .toDateTimeAtMidnight(), RegistrationStateSystem.getInstance().getExternalAbandonState());
 
                 state.setRemarks(RenderUtils.getFormatedResourceString(RESOURCE_BUNDLE,
                         "message.academicAdministration.abandonState.observations"));
